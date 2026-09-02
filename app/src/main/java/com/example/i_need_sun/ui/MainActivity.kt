@@ -41,6 +41,7 @@ class MainActivity : AppCompatActivity() {
             tvAzimuth.text = "Azimuth: %d°".format(sun.azDeg.toInt())
         }
 
+
         updateLabels(seekBar.progress)
         shadowView.minuteOfDay = seekBar.progress
 
@@ -52,6 +53,7 @@ class MainActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(sb: SeekBar) {}
             override fun onStopTrackingTouch(sb: SeekBar) {}
         })
+
     }
 
     /**

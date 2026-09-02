@@ -7,4 +7,17 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+
+    <color name="ground_light">#FFFFFF</color>
+    <color name="building_fill_light">#CCCCCC</color>
+    <color name="building_outline_light">#555555</color>
+    <color name="compass_light">#555555</color>
+
+    <color name="ground_dark">#323F52</color>
+    <color name="building_fill_dark">#6A6A6A</color>
+    <color name="building_outline_dark">#AAAAAA</color>
+    <color name="compass_dark">#AAAAAA</color>
+
+    <color name="shadow_color">#000000</color>
 </resources>

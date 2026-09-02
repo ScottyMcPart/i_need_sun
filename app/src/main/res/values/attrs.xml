@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="colorGround"          format="color" />
+    <attr name="colorBuildingFill"    format="color" />
+    <attr name="colorBuildingOutline" format="color" />
+    <attr name="colorCompass"         format="color" />
+</resources>
