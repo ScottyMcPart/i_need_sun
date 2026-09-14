@@ -5,6 +5,7 @@ import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.i_need_sun.R
+import com.example.i_need_sun.domain.model.OBSERVER
 import com.example.i_need_sun.domain.solar.sunPosition
 import com.example.i_need_sun.ui.view.ShadowView
 
@@ -33,7 +34,7 @@ class MainActivity : AppCompatActivity() {
             val m = minutes % 60
             tvTime.text = "%02d:%02d".format(h, m)
 
-            val sun = sunPosition(minutes)
+            val sun = sunPosition(minutes, OBSERVER.lat)
             tvElevation.text = if (sun.isAboveHorizon)
                 "Elevation: %.1f°".format(sun.elevDeg)
             else
@@ -71,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         var foundSunrise = false
 
         for (min in 0 until 24 * 60) {
-            val above = sunPosition(min).isAboveHorizon
+            val above = sunPosition(min, OBSERVER.lat).isAboveHorizon
             if (!foundSunrise && above) {
                 sunriseMin = min
                 foundSunrise = true

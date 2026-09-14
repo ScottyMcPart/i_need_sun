@@ -85,7 +85,7 @@ class ShadowView @JvmOverloads constructor(
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), groundPaint)
 
         // 2. Shadow
-        val sun = sunPosition(minuteOfDay)
+        val sun = sunPosition(minuteOfDay, OBSERVER.lat)
         val sv  = shadowVector(sun)
 
         // 3. Check if observer area centre is inside the shadow polygon

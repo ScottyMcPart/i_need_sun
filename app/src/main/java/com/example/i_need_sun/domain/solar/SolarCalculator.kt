@@ -10,7 +10,7 @@ data class SunPosition(
     val isAboveHorizon: Boolean get() = elevDeg > 0.5
 }
 
-fun sunPosition(minuteOfDay: Int): SunPosition {
+fun sunPosition(minuteOfDay: Int, latDeg: Double): SunPosition {
 
     //---------Calaculate declination from today's date----------------
     val cal = Calendar.getInstance()
@@ -24,7 +24,7 @@ fun sunPosition(minuteOfDay: Int): SunPosition {
     val decl = Math.toRadians(declDeg)
     //-----------------------------------------------------------------
 
-    val lat  = Math.toRadians(51.0) // central Europe
+    val lat  = Math.toRadians(latDeg) // central Europe
 
     // Hour angle: 0 at solar noon, ±15° per hour
     val ha = Math.toRadians((minuteOfDay / 60.0 - 12.0) * 15.0)
