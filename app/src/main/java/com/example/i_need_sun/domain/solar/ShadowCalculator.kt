@@ -66,3 +66,28 @@ private fun convexHull(pts: List<PointF>): List<PointF> {
     } while (current != start && hull.size <= pts.size)
     return hull
 }
+fun isPointInShadow(
+    px: Float,
+    py: Float,
+    sv: ShadowVec,
+    building: BuildingRect
+): Boolean {
+    val pts = shadowPolygon(building, sv)
+    var inside = false
+    var j = pts.size-1
+    for(i in pts.indices){
+        val xi = pts[i].x
+        val yi = pts[j].y
+        val xj = pts[i].x
+        val yj = pts[j].y
+
+        val slope = (xj - xi)/(yj - yi)
+        val dx = slope * (py -yi)
+
+        val intersects = (yi > py) != (yj > py) &&
+                px < dx + xi
+        if (intersects) inside = !inside
+        j = i
+    }
+    return inside
+}
