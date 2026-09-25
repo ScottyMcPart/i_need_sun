@@ -4,10 +4,12 @@ import android.os.Bundle
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.i_need_sun.R
-import com.example.i_need_sun.domain.model.OBSERVER
+import com.example.i_need_sun.domain.model.SCENES
 import com.example.i_need_sun.domain.solar.sunPosition
-import com.example.i_need_sun.ui.view.ShadowView
+import com.example.i_need_sun.ui.adapter.SceneAdapter
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -15,18 +17,24 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val shadowView  = findViewById<ShadowView>(R.id.shadowView)
         val seekBar     = findViewById<SeekBar>(R.id.seekBarTime)
         val tvTime      = findViewById<TextView>(R.id.tvTime)
         val tvElevation = findViewById<TextView>(R.id.tvElevation)
         val tvAzimuth   = findViewById<TextView>(R.id.tvAzimuth)
+        val recycler    = findViewById<androidx.recyclerview.widget.RecyclerView>(R.id.recyclerScenes)
+
+        // Set up the RecyclerView
+        val adapter = SceneAdapter(SCENES)
+        recycler.layoutManager = LinearLayoutManager(this)
+        recycler.adapter = adapter
+
 
         // ── Calculate real sunrise and sunset for today ───────────────────
         val (sunriseMin, sunsetMin) = calcSunriseSunset()
         // Add 30 min padding so the slider doesn't start/end exactly at horizon
         seekBar.min      = (sunriseMin - 30).coerceAtLeast(0)
         seekBar.max      = (sunsetMin  + 30).coerceAtMost(23 * 60 + 59)
-        seekBar.progress = 720 // start at noon
+        seekBar.progress = 720
         // ─────────────────────────────────────────────────────────────────
 
         fun updateLabels(minutes: Int) {
@@ -34,7 +42,8 @@ class MainActivity : AppCompatActivity() {
             val m = minutes % 60
             tvTime.text = "%02d:%02d".format(h, m)
 
-            val sun = sunPosition(minutes, OBSERVER.lat)
+            val lat = SCENES.first().observer.geo.lat
+            val sun = sunPosition(minutes, lat)
             tvElevation.text = if (sun.isAboveHorizon)
                 "Elevation: %.1f°".format(sun.elevDeg)
             else
@@ -44,11 +53,11 @@ class MainActivity : AppCompatActivity() {
 
 
         updateLabels(seekBar.progress)
-        shadowView.minuteOfDay = seekBar.progress
+        adapter.updateTime(seekBar.progress)
 
         seekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(sb: SeekBar, progress: Int, fromUser: Boolean) {
-                shadowView.minuteOfDay = progress
+                adapter.updateTime(progress)
                 updateLabels(progress)
             }
             override fun onStartTrackingTouch(sb: SeekBar) {}
@@ -71,8 +80,10 @@ class MainActivity : AppCompatActivity() {
         var sunsetMin  = 1080 // fallback 18:00
         var foundSunrise = false
 
+        val lat = SCENES.first().observer.geo.lat
+
         for (min in 0 until 24 * 60) {
-            val above = sunPosition(min, OBSERVER.lat).isAboveHorizon
+            val above = sunPosition(min, lat).isAboveHorizon
             if (!foundSunrise && above) {
                 sunriseMin = min
                 foundSunrise = true

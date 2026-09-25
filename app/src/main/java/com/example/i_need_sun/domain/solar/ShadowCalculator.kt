@@ -2,18 +2,17 @@ package com.example.i_need_sun.domain.solar
 
 import android.graphics.PointF
 import com.example.i_need_sun.domain.model.BuildingRect
-import com.example.i_need_sun.domain.model.BUILDING_HEIGHT_M
 import com.example.i_need_sun.domain.model.PIXELS_PER_METER
 import kotlin.math.*
 
 data class ShadowVec(val dx: Float, val dy: Float)
 
 // Returns null when the sun is below the horizon
-fun shadowVector(sun: SunPosition): ShadowVec? {
+fun shadowVector(sun: SunPosition, heightM: Double): ShadowVec? {
     if (!sun.isAboveHorizon) return null
 
     // Length on the ground = building height / tan(elevation)
-    val lengthPx = (BUILDING_HEIGHT_M /
+    val lengthPx = (heightM /
             tan(Math.toRadians(sun.elevDeg))) * PIXELS_PER_METER
 
     // Shadow falls directly opposite the sun
@@ -69,8 +68,9 @@ private fun convexHull(pts: List<PointF>): List<PointF> {
 fun isPointInShadow(
     px: Float,
     py: Float,
+    building: BuildingRect,
     sv: ShadowVec,
-    building: BuildingRect
+
 ): Boolean {
     val pts = shadowPolygon(building, sv)
     var inside = false

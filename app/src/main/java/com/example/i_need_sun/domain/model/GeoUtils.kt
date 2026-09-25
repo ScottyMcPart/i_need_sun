@@ -2,19 +2,19 @@ package com.example.i_need_sun.domain.model
 
 import kotlin.math.*
 
-fun geoToPixelOffset(observer: GeoPoint,
-                     target: GeoPoint,
-                     pixelsPerMeter: Int = PIXELS_PER_METER
+fun geoToPixelOffset(
+    observer: GeoPoint,
+    target: GeoPoint,
+    pixelsPerMeter: Int = PIXELS_PER_METER
 ): Pair<Int, Int> {
     val metersPerDegLat = 111_320.0
     val metersPerDegLng = 111_320.0 * cos(Math.toRadians(observer.lat))
-
     val dNorthM = (target.lat - observer.lat) * metersPerDegLat
     val dEastM  = (target.lng - observer.lng) * metersPerDegLng
-
-    val dx = (dEastM   * pixelsPerMeter).toInt()
-    val dy = (-dNorthM * pixelsPerMeter).toInt()
-    return Pair(dx, dy)
+    return Pair(
+        (dEastM   * pixelsPerMeter).toInt(),
+        (-dNorthM * pixelsPerMeter).toInt()
+    )
 }
 
 fun buildingRectFromGeo(
@@ -39,13 +39,13 @@ fun buildingRectFromGeo(
 
 // Same function reused for the observer area rectangle
 fun observerRectFromGeo(
+    observer: ObserverArea,
     canvasCentreX: Int,
     canvasCentreY: Int,
     pixelsPerMeter: Int = PIXELS_PER_METER
 ): BuildingRect {
-    val wPx = (OBSERVER_WIDTH_M * pixelsPerMeter).toInt()
-    val hPx = (OBSERVER_DEPTH_M * pixelsPerMeter).toInt()
-    // Observer is the canvas centre, so the rect is centred there
+    val wPx = (observer.widthM * pixelsPerMeter).toInt()
+    val hPx = (observer.depthM * pixelsPerMeter).toInt()
     return BuildingRect(
         x   = canvasCentreX - wPx / 2,
         y   = canvasCentreY - hPx / 2,
