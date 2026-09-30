@@ -9,6 +9,9 @@ import com.example.i_need_sun.R
 import com.example.i_need_sun.domain.model.SCENES
 import com.example.i_need_sun.domain.solar.sunPosition
 import com.example.i_need_sun.ui.adapter.SceneAdapter
+import com.example.i_need_sun.data.remote.*
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 
 class MainActivity : AppCompatActivity() {
@@ -63,6 +66,23 @@ class MainActivity : AppCompatActivity() {
             override fun onStartTrackingTouch(sb: SeekBar) {}
             override fun onStopTrackingTouch(sb: SeekBar) {}
         })
+
+        //TEMP!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        val btnTest = findViewById<android.widget.Button>(R.id.btnTest)
+        btnTest.setOnClickListener {
+            lifecycleScope.launch {
+                try {
+                    val results = nominatimService.search("Aachen Germany")
+                    results.forEach {
+                        android.util.Log.d("NOMINATIM", "${it.shortName} → ${it.latitude}, ${it.longitude}")
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.e("NOMINATIM", "Failed: ${e.message}")
+                }
+            }
+        }
+
+
 
     }
 

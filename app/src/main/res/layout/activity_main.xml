@@ -58,6 +58,12 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/btnTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test Nominatim" />
+
     <!-- Scrollable scene cards -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerScenes"
